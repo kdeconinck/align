@@ -32,15 +32,15 @@ type Queue[T any] struct {
 }
 
 // New returns an empty [Queue].
-func New[T any]() Queue[T] {
-	return Queue[T]{
+func New[T any]() *Queue[T] {
+	return &Queue[T]{
 		data: make([]T, 0),
 	}
 }
 
 // WithCapacity returns an empty [Queue] that has capacity of cap.
-func WithCapacity[T any](cap int) Queue[T] {
-	return Queue[T]{
+func WithCapacity[T any](cap int) *Queue[T] {
+	return &Queue[T]{
 		data: make([]T, 0, cap),
 	}
 }
