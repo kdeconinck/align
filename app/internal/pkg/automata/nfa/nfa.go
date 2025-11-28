@@ -64,7 +64,7 @@ func (s *State[S, V]) Epsilon() []*State[S, V] {
 // Add adds and returns a new transition starting from s for symbol sym.
 // Adding a transition causes a new [State] to be generated.
 func (n *Nfa[S, V]) Add(s *State[S, V], sym S) *State[S, V] {
-	state := n.newState()
+	state := n.NewState()
 	s.put(sym, state)
 
 	return state
@@ -82,8 +82,8 @@ func (n *Nfa[S, V]) AddAccepting(s *State[S, V], sym S, value V) *State[S, V] {
 // AddEpsilonTransition adds and returns an epsilon transition starting from s.
 // Adding an epsilon transition causes a new [State] to be generated.
 func (n *Nfa[S, V]) AddEpsilonTransition(s *State[S, V]) *State[S, V] {
-	state := n.newState()
-	s.eTransitions = append(s.eTransitions, state)
+	state := n.NewState()
+	n.ConnectEpsilon(s, state)
 
 	return state
 }
@@ -102,8 +102,13 @@ func (n *Nfa[S, V]) Connect(from *State[S, V], sym S, to *State[S, V]) {
 	from.put(sym, to)
 }
 
-// Returns a new [State].
-func (n *Nfa[S, V]) newState() *State[S, V] {
+// ConnectEpsilon adds an epsilon transition from from to to.
+func (n *Nfa[S, V]) ConnectEpsilon(from *State[S, V], to *State[S, V]) {
+	from.eTransitions = append(from.eTransitions, to)
+}
+
+// NewState returns a new, non-accepting [State].
+func (n *Nfa[S, V]) NewState() *State[S, V] {
 	id := n.nextStateID
 	n.nextStateID++
 
